@@ -43,7 +43,8 @@ namespace Employee_CRUD.Repositories
         public async Task Update(Employee employee)
         {
             _context.Entry(employee).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+           await _context.SaveChangesAsync();
+            
         }
 
     }
