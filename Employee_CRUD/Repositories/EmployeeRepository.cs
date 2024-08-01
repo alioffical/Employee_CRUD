@@ -13,10 +13,11 @@ namespace Employee_CRUD.Repositories
             _context = context;
         }
 
-        public async Task Add(Employee employee)
+        public async Task<bool> Add(Employee employee)
         {
             _context.Employees.Add(employee);
-            await _context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync();
+            return result > 0;
         }
 
         public async Task Delete(int id)
