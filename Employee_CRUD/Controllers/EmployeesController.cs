@@ -1,9 +1,6 @@
 ﻿using Employee_CRUD.Model;
 using Employee_CRUD.Repositories;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Employee_CRUD.Controllers
 {
