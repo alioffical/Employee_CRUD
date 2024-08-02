@@ -19,9 +19,9 @@ namespace Employee_CRUD.Controllers
 
 
         [HttpPost("AddEmployee")]
-        public async Task<ActionResult<Employee>> PostEmployee([FromBody] Employee employee)
+        public async Task<ActionResult<Employee>> AddEmployee([FromBody] Employee employee)
         {
-            
+
 
             if (string.IsNullOrWhiteSpace(employee.FirstName) || string.IsNullOrWhiteSpace(employee.MiddleName) || string.IsNullOrWhiteSpace(employee.LastName))
             {
@@ -33,17 +33,17 @@ namespace Employee_CRUD.Controllers
                 var result = await _repository.Add(employee);
                 return Ok(new { Success = result, data = employee });
             }
-            
+
             catch (Exception ex)
             {
                 return StatusCode(500, $"An internal server error occurred: {ex.Message}");
             }
-            
+
         }
 
 
         [HttpGet("GetAllEmployees")]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+        public async Task<ActionResult<IEnumerable<Employee>>> GetAllEmployees()
         {
             var employees = await _repository.GetAll();
             return Ok(employees);
@@ -64,53 +64,47 @@ namespace Employee_CRUD.Controllers
 
 
         [HttpPost("UpdateById")]
-        public async Task<IActionResult> PutEmployee([FromBody] Employee employee)
+        public async Task<IActionResult> UpdateById([FromBody] Employee employee)
         {
-            if (employee.Id <= 0)
-            {
-                return BadRequest("Invalid employee ID.");
-            }
             try
             {
-                var existingEmployee = await _repository.GetById(employee.Id);
-                return Ok(new { Success = existingEmployee, data = employee });
+                var existingEmployee = await _repository.Update(employee);
+
+                if (existingEmployee)
+                {
+                    return Ok(new { Success = existingEmployee, data = employee });
+                }
+                else
+                {
+                    return Ok(new { Success = false, data = employee });
+                }
             }
             catch (Exception)
             {
-
                 throw;
             }
-           
-            //if (existingEmployee == null)
-            //{
-            //    return NotFound($"Employee with ID {employee.Id} not found.");
-            //}
 
-            //try
-            //{
-            //    await _repository.Update(existingEmployee);
-            //}
-             
-            //catch (Exception ex)
-            //{
-            //    return StatusCode(500, "An internal server error occurred.");
-            //}
-
-           
         }
-        
+
 
         [HttpPost("DeletebyId/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeletebyId(int id)
         {
             var employee = await _repository.GetById(id);
             if (employee == null)
             {
-                return NotFound();
+                return NotFound($"Employee with ID {id} not found.");
             }
 
-            await _repository.Delete(id);
-            return Ok("Record Deleted Successfully");
+            bool isDeleted = await _repository.Delete(id);
+            if (isDeleted)
+            {
+                return Ok("Record deleted successfully.");
+            }
+            else
+            {
+                return StatusCode(500, "An error occurred while deleting the record.");
+            }
         }
 
     }

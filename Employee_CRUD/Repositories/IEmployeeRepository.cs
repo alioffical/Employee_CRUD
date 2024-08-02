@@ -7,8 +7,8 @@ namespace Employee_CRUD.Repositories
         Task<List<Employee>> GetAll();
         Task<Employee> GetById(int id);
         Task<bool> Add(Employee employee);
-        Task Update(Employee employee);
-        Task Delete(int id);
+        Task<bool> Update(Employee employee);
+        Task<bool> Delete(int id);
        
     }
 }
